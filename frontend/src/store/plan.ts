@@ -1,34 +1,40 @@
 import { StoreNameEnum } from '@/types'
-import { NullableDate, Place, Plan } from '@/types/plan'
+import { AddPlanReqDto, NullableDate } from '@/types/plan'
 
 import { createStoreWithMiddleware } from './createStoreWithMiddleware'
 
 type PlanState = {
-  plan: Plan
+  plan: AddPlanReqDto
 }
 
 type PlanActions = {
-  setName: (value: string) => void
+  setPlanName: (value: string) => void
+  setPlanCountry: (value: string) => void
   setHeadCount: (value: number) => void
   setDates: (startDate: NullableDate, endDate: NullableDate) => void
-  setPlaces: (places: Place[]) => void
-  setPlan: (newPlan: Partial<Plan>) => void
+  setPlan: (newPlan: Partial<AddPlanReqDto>) => void
+  resetPlan: () => void
 }
 
-const initialState = {
-  name: '',
+const initialState: AddPlanReqDto = {
+  planName: '',
+  planCountry: '',
   headCount: 1,
-  startDate: new Date(),
+  startDate: null,
   endDate: null,
-  places: [],
+  planEnd: false,
 }
 
 export const usePlanStore = createStoreWithMiddleware<PlanState & PlanActions>(
   (set) => ({
     plan: initialState,
-    setName: (value) =>
+    setPlanName: (value) =>
       set(({ plan }) => {
-        plan.name = value
+        plan.planName = value
+      }),
+    setPlanCountry: (country) =>
+      set(({ plan }) => {
+        plan.planCountry = country
       }),
     setHeadCount: (value) =>
       set(({ plan }) => {
@@ -39,16 +45,17 @@ export const usePlanStore = createStoreWithMiddleware<PlanState & PlanActions>(
         plan.startDate = startDate
         plan.endDate = endDate
       }),
-    setPlaces: (places) =>
-      set(({ plan }) => {
-        plan.places = places
-      }),
     setPlan: (values) => {
       set(({ plan }) => {
         plan = {
           ...plan,
           ...values,
         }
+      })
+    },
+    resetPlan: () => {
+      set((state) => {
+        state.plan = initialState
       })
     },
   }),

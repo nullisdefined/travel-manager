@@ -1,5 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios'
+import camelcaseKeys from 'camelcase-keys'
 import { jwtDecode } from 'jwt-decode'
+import snakecaseKeys from 'snakecase-keys'
 
 import { routes } from '@/routes'
 import { getToken, removeToken, setToken } from '@/store/auth'
@@ -36,7 +38,7 @@ export const createClient = (config?: AxiosRequestConfig): AxiosInstance => {
       'Content-Type': 'application/json',
       Authorization: getToken('accessToken') ? getToken('accessToken') : '',
     },
-    withCredentials: true,
+
     ...config,
   })
 
@@ -80,6 +82,7 @@ export const createClient = (config?: AxiosRequestConfig): AxiosInstance => {
         } catch (refreshError) {
           isRefreshing = false
           removeToken('refreshToken')
+          removeToken('accessToken')
           window.location.href = '/login'
           return Promise.reject(refreshError)
         }
@@ -94,10 +97,18 @@ export const createClient = (config?: AxiosRequestConfig): AxiosInstance => {
     (error: AxiosError) => Promise.reject(error)
   )
 
+  // request interceptor
+  axiosInstance.interceptors.request.use((request) => {
+    if (request.data) {
+      return { ...request, data: snakecaseKeys(request.data, { deep: true }) }
+    }
+    return request
+  })
+
   // Response Interceptor
   axiosInstance.interceptors.response.use(
     (response) => {
-      return response
+      return { ...response, data: camelcaseKeys(response.data, { deep: true }) }
     },
     (error: AxiosError) => {
       //401 => accessToken 만료

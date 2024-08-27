@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { getKakaoToken } from '@/api/kakaoAuth'
@@ -16,6 +16,7 @@ export const useKakaoLogin = ({ code }: Props) => {
   useEffect(() => {
     getKakaoToken({ code })
       .then((response) => {
+        console.log(response)
         if (response?.data?.accessToken && response?.data?.refreshToken) {
           authLogin('accessToken', response.data.accessToken)
           setToken('refreshToken', response.data.refreshToken)

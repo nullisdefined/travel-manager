@@ -6,6 +6,7 @@ export enum AddPlanStepEnum {
 
 export enum StoreNameEnum {
   Plan = 'plan',
+  Auth = 'auth',
 }
 
 export enum DateFormatTypeEnum {
@@ -20,4 +21,5 @@ export enum HttpStatusCodeEnum {
   Forbbiden = 403,
   NotFound = 404,
   OK = 200,
+  Created = 201,
 }

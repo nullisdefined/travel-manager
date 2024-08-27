@@ -60,10 +60,21 @@ export default {
     plugin(({ addUtilities }) =>
       addUtilities({
         '.layout': {
-          '@apply mx-auto max-w-2xl lg:max-w-4xl lg:flex lg:gap-x-10': '',
+          '@apply mx-auto max-w-lg lg:max-w-5xl lg:flex lg:gap-x-10': '',
         },
         '.container': {
           '@apply max-w-lg mx-auto min-h-dvh': '',
+        },
+        '.no-scrollbar': {
+          /* Hide scrollbar for modern browsers */
+          '::-webkit-scrollbar': {
+            display: 'none',
+          },
+          '-ms-overflow-style': 'none' /* IE and Edge */,
+          'scrollbar-width': 'none' /* Firefox */,
+        },
+        '.outline-button': {
+          '@apply border border-blue-500 bg-transparent text-blue-500': '',
         },
       })
     ),

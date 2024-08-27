@@ -9,6 +9,7 @@ import {
   HttpCode,
   UnauthorizedException,
   Res,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ConfigService } from '@nestjs/config';
@@ -74,10 +75,11 @@ export class AuthController {
   @Post('kakao')
   // @UseGuards(AuthGuard('kakao'))
   @HttpCode(HttpStatus.OK)
-  async kakaoLogin(@Body() body: { kakaoAccessToken: string }) {
+  async kakaoLogin(@Body() body: { kakao_access_token: string }) {
+    console.log('카카오 요청바디', body);
     try {
       const { user, accessToken, refreshToken } =
-        await this.authService.loginWithKakao(body.kakaoAccessToken);
+        await this.authService.loginWithKakao(body.kakao_access_token);
 
       return {
         statusCode: HttpStatus.OK,
